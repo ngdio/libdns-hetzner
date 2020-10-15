@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/libdns/libdns"
@@ -66,6 +67,10 @@ func doRequest(token string, request *http.Request) ([]byte, error) {
 }
 
 func getZoneID(ctx context.Context, token string, zone string) (string, error) {
+	// Retrieving zone fails when trailing dot (standard in
+	// caddy/certmagic) so let's remove it right here
+	zone = strings.TrimRight(zone, ".")
+
 	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("https://dns.hetzner.com/api/v1/zones?name=%s", url.QueryEscape(zone)), nil)
 	data, err := doRequest(token, req)
 	if err != nil {
