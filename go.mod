@@ -1,4 +1,4 @@
-module github.com/libdns/hetzner
+module github.com/ngdio/libdns-hetzner
 
 go 1.14
 
